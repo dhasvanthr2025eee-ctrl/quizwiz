@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QuizWiz - Online Quiz System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 40px;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            width: 320px;
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            color: #5b21b6;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: block;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.04);
+        }
+
+        .footer {
+            margin-top: 35px;
+            color: white;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        🎓 QuizWiz
+    </div>
+
+    <div class="subtitle">
+        Simple Online Quiz Conducting System
+    </div>
+
+    <div class="cards">
+
+        <!-- FACULTY -->
+
+        <div class="card">
+
+            <div class="icon">
+                👨‍🏫
+            </div>
+
+            <h2>Faculty</h2>
+
+            <p>
+                Create quizzes, add MCQ questions
+                and view student marks.
+            </p>
+
+            <a href="/faculty.html" class="btn">
+                Faculty Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- STUDENT -->
+
+        <div class="card">
+
+            <div class="icon">
+                👨‍🎓
+            </div>
+
+            <h2>Student</h2>
+
+            <p>
+                Register, login, attend quizzes
+                and view your score.
+            </p>
+
+            <a href="/student-login.html" class="btn">
+                Student Login
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        © 2026 QuizWiz | Online Quiz System
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizWiz - Student Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #dbeafe 0%, transparent 35%),
+                radial-gradient(circle at bottom right, #ede9fe 0%, transparent 35%),
+                #f8fafc;
+            color: #1e293b;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1150px;
+            margin: auto;
+            padding: 30px 0 50px;
+        }
+
+        /* HEADER */
+
+        .header {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed,
+                #2563eb
+            );
+            color: white;
+            padding: 30px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.25);
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            right: -80px;
+            top: -100px;
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+            left: 40%;
+            bottom: -130px;
+        }
+
+        .welcome {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .student-badge {
+            position: relative;
+            z-index: 2;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.18);
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 30px;
+        }
+
+        /* NAVIGATION */
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+
+        .nav-btn {
+            padding: 13px 20px;
+            border-radius: 12px;
+            background: white;
+            color: #475569;
+            box-shadow: 0 5px 15px rgba(15,23,42,0.07);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15,23,42,0.12);
+        }
+
+        .nav-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: 0 7px 20px rgba(79,70,229,0.25);
+        }
+
+        .logout {
+            margin-left: auto;
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .logout:hover {
+            background: #fecaca;
+        }
+
+        /* SECTION */
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title h2 {
+            font-size: 25px;
+            color: #1e293b;
+        }
+
+        .section-title span {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* QUIZ GRID */
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
+        }
+
+        /* QUIZ CARD */
+
+        .quiz-card {
+            position: relative;
+            overflow: hidden;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(15,23,42,0.07);
+            transition: all 0.3s ease;
+            border: 1px solid #eef2ff;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 18px 35px rgba(79,70,229,0.15);
+        }
+
+        .quiz-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(
+                90deg,
+                #4f46e5,
+                #7c3aed,
+                #2563eb
+            );
+        }
+
+        .quiz-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                #eef2ff,
+                #ede9fe
+            );
+            font-size: 27px;
+            margin-bottom: 17px;
+        }
+
+        .quiz-card h3 {
+            font-size: 21px;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        .description {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 45px;
+            margin-bottom: 20px;
+        }
+
+        /* QUIZ INFO */
+
+        .info {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        /* START BUTTON */
+
+        .start-btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed
+            );
+            box-shadow: 0 7px 18px rgba(79,70,229,0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79,70,229,0.3);
+        }
+
+        /* EMPTY / LOADING */
+
+        .loading,
+        .empty {
+            background: white;
+            padding: 55px 25px;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(15,23,42,0.06);
+            color: #64748b;
+        }
+
+        .loading-icon,
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .loading h3,
+        .empty h3 {
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        /* ERROR */
+
+        .error {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            color: #9f1239;
+            padding: 25px;
+            border-radius: 16px;
+        }
+
+        .error h3 {
+            margin-bottom: 10px;
+        }
+
+        .error pre {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin: 15px 0;
+            color: #7f1d1d;
+            font-size: 13px;
+        }
+
+        .retry-btn {
+            padding: 11px 18px;
+            border-radius: 10px;
+            background: #4f46e5;
+            color: white;
+        }
+
+        /* HISTORY */
+
+        #historySection {
+            display: none;
+        }
+
+        .history-card {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 7px 22px rgba(15,23,42,0.06);
+            border-left: 5px solid #4f46e5;
+        }
+
+        .history-card h3 {
+            margin-bottom: 7px;
+        }
+
+        .history-card p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .score {
+            font-size: 22px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #15803d;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+            margin-top: 45px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: 94%;
+                padding-top: 18px;
+            }
+
+            .header {
+                padding: 25px 20px;
+            }
+
+            .welcome h1 {
+                font-size: 24px;
+            }
+
+            .student-badge {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+
+            .nav-buttons {
+                width: 100%;
+            }
+
+            .nav-btn {
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .logout {
+                margin-left: 0;
+            }
+
+            .history-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .score {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="welcome">
+
+            <h1>
+                🎓 Welcome to QuizWiz
+            </h1>
+
+            <p>
+                Hello,
+                <strong id="studentName">Student</strong>
+                👋
+                Ready to test your knowledge?
+            </p>
+
+        </div>
+
+        <div class="student-badge">
+            👨‍🎓
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="nav-buttons">
+
+        <button
+            id="availableBtn"
+            class="nav-btn active"
+            onclick="showAvailable()">
+
+            📝 Available Quizzes
+
+        </button>
+
+        <button
+            id="historyBtn"
+            class="nav-btn"
+            onclick="showHistory()">
+
+            📊 My History
+
+        </button>
+
+        <button
+            class="nav-btn logout"
+            onclick="logout()">
+
+            🚪 Logout
+
+        </button>
+
+    </div>
+
+
+    <!-- AVAILABLE QUIZZES -->
+
+    <div id="availableSection">
+
+        <div class="section-title">
+
+            <h2>
+                Available Quizzes
+            </h2>
+
+            <span>
+                Choose a quiz and start learning 🚀
+            </span>
+
+        </div>
+
+        <div id="quizList" class="loading">
+
+            <div class="loading-icon">
+                ⏳
+            </div>
+
+            <h3>
+                Loading quizzes...
+            </h3>
+
+            <p>
+                Please wait a moment.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- HISTORY -->
+
+    <div id="historySection">
+
+        <div class="section-title">
+
+            <h2>
+                Quiz History
+            </h2>
+
+            <span>
+                Your completed quizzes 📚
+            </span>
+
+        </div>
+
+        <div id="historyList">
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        QuizWiz © 2026
+
+        <br>
+
+        Learn • Practice • Improve
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SESSION DATA
+===================================================== */
+
+const studentId =
+    sessionStorage.getItem("studentId");
+
+const studentName =
+    sessionStorage.getItem("studentName");
+
+/*
+   Store all quizzes here.
+   This is used later to find the total
+   number of questions for history.
+*/
+let allQuizzes = [];
+
+
+/* =====================================================
+   LOGIN CHECK
+===================================================== */
+
+if (!studentId) {
+
+    window.location.href =
+        "student-login.html";
+
+} else {
+
+    document.getElementById(
+        "studentName"
+    ).textContent =
+        studentName || "Student";
+
+    loadQuizzes();
+}
+
+
+/* =====================================================
+   LOAD AVAILABLE QUIZZES
+===================================================== */
+
+async function loadQuizzes() {
+
+    const quizList =
+        document.getElementById("quizList");
+
+    quizList.innerHTML = `
+
+        <div class="loading">
+
+            <div class="loading-icon">
+                ⏳
+            </div>
+
+            <h3>
+                Loading quizzes...
+            </h3>
+
+            <p>
+                Please wait a moment.
+            </p>
+
+        </div>
+
+    `;
+
+    try {
+
+        /* =========================
+           GET ALL QUIZZES
+        ========================== */
+
+        const quizResponse =
+            await fetch("/api/quizzes");
+
+        if (!quizResponse.ok) {
+
+            const errorText =
+                await quizResponse.text();
+
+            throw new Error(
+                "Quiz API Error:\n" +
+                errorText
+            );
+        }
+
+        const quizzes =
+            await quizResponse.json();
+
+        /*
+           IMPORTANT:
+           Save quizzes globally so that
+           showHistory() can use them.
+        */
+
+        allQuizzes = quizzes;
+
+
+        /* =========================
+           GET STUDENT HISTORY
+        ========================== */
+
+        let history = [];
+
+        try {
+
+            const historyResponse =
+                await fetch(
+                    "/api/attempts/student/" +
+                    studentId +
+                    "/history"
+                );
+
+            if (historyResponse.ok) {
+
+                history =
+                    await historyResponse.json();
+            }
+
+        } catch (historyError) {
+
+            console.error(
+                "History loading error:",
+                historyError
+            );
+        }
+
+
+        /* =========================
+           FIND COMPLETED QUIZZES
+        ========================== */
+
+        const completedQuizIds =
+            history
+                .filter(function(attempt) {
+
+                    return (
+                        attempt.submitted === true
+                    );
+
+                })
+                .map(function(attempt) {
+
+                    if (
+                        attempt.quiz &&
+                        attempt.quiz.id
+                    ) {
+
+                        return Number(
+                            attempt.quiz.id
+                        );
+                    }
+
+                    return null;
+
+                })
+                .filter(function(id) {
+
+                    return id !== null;
+
+                });
+
+
+        /* =========================
+           FILTER AVAILABLE QUIZZES
+        ========================== */
+
+        const availableQuizzes =
+            quizzes.filter(function(quiz) {
+
+                return !completedQuizIds.includes(
+                    Number(quiz.id)
+                );
+
+            });
+
+
+        /* =========================
+           CLEAR LIST
+        ========================== */
+
+        quizList.innerHTML = "";
+
+
+        /* =========================
+           NO QUIZZES
+        ========================== */
+
+        if (
+            availableQuizzes.length === 0
+        ) {
+
+            quizList.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        🎉
+                    </div>
+
+                    <h3>
+                        No quizzes available
+                    </h3>
+
+                    <p>
+                        You have completed
+                        all available quizzes.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        /* =========================
+           QUIZ GRID
+        ========================== */
+
+        const grid =
+            document.createElement("div");
+
+        grid.className =
+            "quiz-grid";
+
+
+        /* =========================
+           CREATE QUIZ CARDS
+        ========================== */
+
+        availableQuizzes.forEach(
+            function(quiz) {
+
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "quiz-card";
+
+
+                const questionCount =
+                    quiz.questions
+                    ? quiz.questions.length
+                    : 0;
+
+
+                const timeLimit =
+                    quiz.timeLimit || 0;
+
+
+                card.innerHTML = `
+
+                    <div class="quiz-icon">
+                        🧠
+                    </div>
+
+                    <h3>
+                        ${escapeHtml(
+                            quiz.title ||
+                            "Untitled Quiz"
+                        )}
+                    </h3>
+
+                    <p class="description">
+                        ${escapeHtml(
+                            quiz.description ||
+                            "Test your knowledge with this quiz."
+                        )}
+                    </p>
+
+                    <div class="info">
+
+                        <div class="info-item">
+
+                            📚
+
+                            <strong>
+                                ${questionCount}
+                            </strong>
+
+                            Questions
+
+                        </div>
+
+                        <div class="info-item">
+
+                            ⏱️
+
+                            <strong>
+                                ${timeLimit}
+                            </strong>
+
+                            Minutes
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="start-btn"
+                        onclick="startQuiz(${Number(quiz.id)})">
+
+                        🚀 Start Quiz
+
+                    </button>
+
+                `;
+
+                grid.appendChild(card);
+
+            }
+        );
+
+
+        quizList.appendChild(grid);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Load quiz error:",
+            error
+        );
+
+
+        quizList.innerHTML = `
+
+            <div class="error">
+
+                <h3>
+                    ❌ Unable to load quizzes
+                </h3>
+
+                <pre>${escapeHtml(
+                    error.message
+                )}</pre>
+
+                <button
+                    class="retry-btn"
+                    onclick="loadQuizzes()">
+
+                    🔄 Try Again
+
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   START QUIZ
+===================================================== */
+
+async function startQuiz(quizId) {
+
+    console.log(
+        "Starting quiz..."
+    );
+
+    console.log(
+        "Student ID:",
+        studentId
+    );
+
+    console.log(
+        "Quiz ID:",
+        quizId
+    );
+
+
+    try {
+
+        const requestData = {
+
+            studentId:
+                Number(studentId),
+
+            quizId:
+                Number(quizId)
+
+        };
+
+
+        console.log(
+            "Sending:",
+            requestData
+        );
+
+
+        const response =
+            await fetch(
+                "/api/attempts/start",
+                {
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Accept":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            requestData
+                        )
+
+                }
+            );
+
+
+        const responseText =
+            await response.text();
+
+
+        console.log(
+            "HTTP Status:",
+            response.status
+        );
+
+        console.log(
+            "Server Response:",
+            responseText
+        );
+
+
+        /* =========================
+           SERVER ERROR
+        ========================== */
+
+        if (!response.ok) {
+
+            alert(
+                "Unable to start quiz.\n\n" +
+                "HTTP Status: " +
+                response.status +
+                "\n\n" +
+                responseText
+            );
+
+            return;
+        }
+
+
+        /* =========================
+           CONVERT RESPONSE TO JSON
+        ========================== */
+
+        let attempt;
+
+
+        try {
+
+            attempt =
+                JSON.parse(
+                    responseText
+                );
+
+        } catch (jsonError) {
+
+            alert(
+                "Invalid server response.\n\n" +
+                responseText
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "Attempt:",
+            attempt
+        );
+
+
+        /* =========================
+           CHECK ATTEMPT ID
+        ========================== */
+
+        if (!attempt.id) {
+
+            alert(
+                "Quiz started, but Attempt ID was not returned."
+            );
+
+            return;
+        }
+
+
+        /* =========================
+           SAVE SESSION
+        ========================== */
+
+        sessionStorage.setItem(
+            "quizId",
+            String(quizId)
+        );
+
+        sessionStorage.setItem(
+            "attemptId",
+            String(attempt.id)
+        );
+
+
+        /* =========================
+           OPEN QUIZ PAGE
+        ========================== */
+
+        window.location.href =
+            "quiz.html";
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Start quiz exception:",
+            error
+        );
+
+
+        alert(
+            "SERVER CONNECTION ERROR\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SHOW HISTORY
+===================================================== */
+
+async function showHistory() {
+
+    document.getElementById(
+        "availableSection"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "historySection"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "availableBtn"
+    ).classList.remove("active");
+
+
+    document.getElementById(
+        "historyBtn"
+    ).classList.add("active");
+
+
+    const historyList =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    historyList.innerHTML = `
+
+        <div class="loading">
+
+            <div class="loading-icon">
+                ⏳
+            </div>
+
+            <h3>
+                Loading history...
+            </h3>
+
+        </div>
+
+    `;
+
+
+    try {
+
+        /* =========================
+           MAKE SURE QUIZZES ARE LOADED
+        ========================== */
+
+        if (
+            !allQuizzes ||
+            allQuizzes.length === 0
+        ) {
+
+            const quizResponse =
+                await fetch("/api/quizzes");
+
+
+            if (quizResponse.ok) {
+
+                allQuizzes =
+                    await quizResponse.json();
+
+            }
+
+        }
+
+
+        /* =========================
+           GET HISTORY
+        ========================== */
+
+        const response =
+            await fetch(
+                "/api/attempts/student/" +
+                studentId +
+                "/history"
+            );
+
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            throw new Error(
+                errorText
+            );
+
+        }
+
+
+        const history =
+            await response.json();
+
+
+        historyList.innerHTML = "";
+
+
+        /* =========================
+           NO HISTORY
+        ========================== */
+
+        if (
+            history.length === 0
+        ) {
+
+            historyList.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        📭
+                    </div>
+
+                    <h3>
+                        No quiz history
+                    </h3>
+
+                    <p>
+                        You haven't completed
+                        any quizzes yet.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        /* =========================
+           HISTORY CARDS
+        ========================== */
+
+        history.forEach(
+            function(attempt) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "history-card";
+
+
+                const quiz =
+                    attempt.quiz || {};
+
+
+                /*
+                   IMPORTANT FIX:
+
+                   First try to get the number
+                   of questions from the quiz
+                   returned in the attempt.
+
+                   If it isn't available, find
+                   the same quiz from /api/quizzes.
+
+                   This prevents 3/0.
+                */
+
+                let totalQuestions = 0;
+
+
+                /* OPTION 1:
+                   Questions directly inside attempt.quiz
+                */
+
+                if (
+                    quiz.questions &&
+                    Array.isArray(quiz.questions)
+                ) {
+
+                    totalQuestions =
+                        quiz.questions.length;
+
+                }
+
+
+                /* OPTION 2:
+                   Find quiz from allQuizzes
+                */
+
+                if (
+                    totalQuestions === 0
+                ) {
+
+                    const quizId =
+                        quiz.id ||
+                        attempt.quizId;
+
+
+                    const matchingQuiz =
+                        allQuizzes.find(
+                            function(q) {
+
+                                return (
+                                    Number(q.id) ===
+                                    Number(quizId)
+                                );
+
+                            }
+                        );
+
+
+                    if (
+                        matchingQuiz &&
+                        matchingQuiz.questions &&
+                        Array.isArray(
+                            matchingQuiz.questions
+                        )
+                    ) {
+
+                        totalQuestions =
+                            matchingQuiz.questions.length;
+
+                    }
+
+                }
+
+
+                /* OPTION 3:
+                   Backend totalQuestions
+                */
+
+                if (
+                    totalQuestions === 0 &&
+                    attempt.totalQuestions != null
+                ) {
+
+                    totalQuestions =
+                        Number(
+                            attempt.totalQuestions
+                        );
+
+                }
+
+
+                const score =
+                    attempt.score != null
+                    ? Number(attempt.score)
+                    : 0;
+
+
+                const status =
+                    attempt.submitted
+                    ? "Submitted"
+                    : "Not Submitted";
+
+
+                card.innerHTML = `
+
+                    <div>
+
+                        <h3>
+
+                            📝
+
+                            ${escapeHtml(
+                                quiz.title ||
+                                "Quiz"
+                            )}
+
+                        </h3>
+
+                        <p>
+
+                            📅
+                            Quiz attempt
+
+                        </p>
+
+                        <span class="status">
+
+                            ✓ ${status}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="score">
+
+                        ${score}/${totalQuestions}
+
+                    </div>
+
+                `;
+
+
+                historyList.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "History error:",
+            error
+        );
+
+
+        historyList.innerHTML = `
+
+            <div class="error">
+
+                <h3>
+                    ❌ Unable to load history
+                </h3>
+
+                <pre>${escapeHtml(
+                    error.message
+                )}</pre>
+
+                <button
+                    class="retry-btn"
+                    onclick="showHistory()">
+
+                    🔄 Try Again
+
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   SHOW AVAILABLE QUIZZES
+===================================================== */
+
+function showAvailable() {
+
+    document.getElementById(
+        "availableSection"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "historySection"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "availableBtn"
+    ).classList.add("active");
+
+
+    document.getElementById(
+        "historyBtn"
+    ).classList.remove("active");
+
+
+    loadQuizzes();
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+    sessionStorage.clear();
+
+    window.location.href =
+        "student-login.html";
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value) {
+
+    const div =
+        document.createElement("div");
+
+
+    div.textContent =
+        value == null
+        ? ""
+        : String(value);
+
+
+    return div.innerHTML;
+
+}
+
+</script>
+
+</body>
+</html>

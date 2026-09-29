@@ -1,0 +1,1276 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QuizWiz - Faculty Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+            color: #222;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a148c, #7b1fa2);
+            color: white;
+            padding: 20px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .logout {
+            background: #ef4444;
+            color: white;
+        }
+
+        .report-btn {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: #4a148c;
+            margin-top: 0;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 7px 0 15px;
+
+            border: 1px solid #ccc;
+            border-radius: 7px;
+
+            font-size: 15px;
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #7b1fa2;
+        }
+
+        .question {
+            background: #f8fafc;
+            border: 1px solid #ddd;
+            border-left: 5px solid #7b1fa2;
+
+            padding: 20px;
+            margin-top: 20px;
+
+            border-radius: 10px;
+        }
+
+        .question h3 {
+            color: #5b21b6;
+        }
+
+        .add-btn {
+            background: #00897b;
+            color: white;
+        }
+
+        .remove-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .create-btn {
+            width: 100%;
+            margin-top: 20px;
+
+            background: linear-gradient(
+                135deg,
+                #4a148c,
+                #7b1fa2
+            );
+
+            color: white;
+            font-size: 16px;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 12px;
+            border-radius: 7px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 7px;
+        }
+
+        /* QUIZ GRID */
+
+        #quizContainer {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(280px, 1fr)
+                );
+
+            gap: 20px;
+        }
+
+        .quiz-card {
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            border-top: 5px solid #7b1fa2;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .quiz-card h3 {
+            color: #4a148c;
+            margin-top: 0;
+        }
+
+        .quiz-description {
+            color: #666;
+            min-height: 40px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            margin-top: 15px;
+        }
+
+        .badge {
+            background: #ede9fe;
+            color: #5b21b6;
+
+            padding: 7px 10px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            width: 100%;
+            margin-top: 15px;
+
+            background: #dc2626;
+            color: white;
+        }
+
+        .empty {
+            text-align: center;
+
+            background: #f8fafc;
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+            color: #666;
+
+            grid-column: 1 / -1;
+        }
+
+        /* TABLE */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #ede9fe;
+            color: #4a148c;
+        }
+
+        @media(max-width: 700px) {
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-right {
+                flex-wrap: wrap;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
+
+<header>
+
+    <div>
+
+        <h1>🎓 QuizWiz</h1>
+
+        <p>Faculty Dashboard</p>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <span id="facultyName"></span>
+
+        <button
+            class="report-btn"
+            onclick="loadReport()">
+
+            📊 Student Marks
+
+        </button>
+
+        <button
+            class="logout"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<div class="container">
+
+
+<!-- =========================================
+     CREATE QUIZ
+========================================= -->
+
+<div class="card">
+
+    <h2>➕ Create Quiz</h2>
+
+
+    <label>Quiz Title</label>
+
+    <input
+        id="quizTitle"
+        placeholder="Enter quiz title">
+
+
+    <label>Description</label>
+
+    <textarea
+        id="quizDescription"
+        placeholder="Enter quiz description">
+    </textarea>
+
+
+    <label>Time Limit (minutes)</label>
+
+    <input
+        id="timeLimit"
+        type="number"
+        min="1"
+        placeholder="Example: 10">
+
+
+    <h2>📝 Questions</h2>
+
+
+    <div id="questionContainer"></div>
+
+
+    <button
+        class="add-btn"
+        onclick="addQuestion()">
+
+        + Add Question
+
+    </button>
+
+
+    <button
+        class="create-btn"
+        onclick="createQuiz()">
+
+        🚀 Create Quiz
+
+    </button>
+
+
+    <p id="quizMessage"></p>
+
+</div>
+
+
+
+<!-- =========================================
+     CREATED QUIZZES
+========================================= -->
+
+<div class="card">
+
+    <h2>📚 Created Quizzes</h2>
+
+
+    <div id="quizContainer">
+
+        <div class="empty">
+
+            Loading quizzes...
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     STUDENT MARKS
+========================================= -->
+
+<div class="card">
+
+    <h2>📊 Student Marks</h2>
+
+
+    <div id="report">
+
+        Click "Student Marks" to view results.
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+/* =========================================
+   LOGIN CHECK
+========================================= */
+
+const facultyId =
+    sessionStorage.getItem("facultyId");
+
+const facultyName =
+    sessionStorage.getItem("facultyName");
+
+
+if (!facultyId) {
+
+    window.location.href =
+        "faculty-login.html";
+}
+
+
+if (facultyName) {
+
+    document.getElementById(
+        "facultyName"
+    ).innerText =
+        "Welcome, " + facultyName;
+
+}
+
+
+/* =========================================
+   QUESTION NUMBER
+========================================= */
+
+let questionNumber = 0;
+
+
+/* =========================================
+   ADD QUESTION
+========================================= */
+
+function addQuestion() {
+
+    questionNumber++;
+
+    const container =
+        document.getElementById(
+            "questionContainer"
+        );
+
+
+    const div =
+        document.createElement("div");
+
+
+    div.className = "question";
+
+    div.id =
+        "question-" + questionNumber;
+
+
+    div.innerHTML = `
+
+        <h3>
+            Question ${questionNumber}
+        </h3>
+
+
+        <label>Question</label>
+
+        <input
+            class="questionText"
+            placeholder="Enter question">
+
+
+        <label>Option A</label>
+
+        <input
+            class="optionA"
+            placeholder="Option A">
+
+
+        <label>Option B</label>
+
+        <input
+            class="optionB"
+            placeholder="Option B">
+
+
+        <label>Option C</label>
+
+        <input
+            class="optionC"
+            placeholder="Option C">
+
+
+        <label>Option D</label>
+
+        <input
+            class="optionD"
+            placeholder="Option D">
+
+
+        <label>Correct Option</label>
+
+        <select class="correctOption">
+
+            <option value="">
+                Select Correct Option
+            </option>
+
+            <option value="A">A</option>
+
+            <option value="B">B</option>
+
+            <option value="C">C</option>
+
+            <option value="D">D</option>
+
+        </select>
+
+
+        <button
+            class="remove-btn"
+            onclick="
+                removeQuestion(${questionNumber})
+            ">
+
+            🗑️ Remove
+
+        </button>
+
+    `;
+
+
+    container.appendChild(div);
+
+}
+
+
+/* =========================================
+   REMOVE QUESTION
+========================================= */
+
+function removeQuestion(number) {
+
+    const question =
+        document.getElementById(
+            "question-" + number
+        );
+
+
+    if (question) {
+
+        question.remove();
+
+    }
+
+}
+
+
+/* =========================================
+   CREATE QUIZ
+========================================= */
+
+async function createQuiz() {
+
+    const title =
+        document.getElementById(
+            "quizTitle"
+        ).value.trim();
+
+
+    const description =
+        document.getElementById(
+            "quizDescription"
+        ).value.trim();
+
+
+    const timeLimit =
+        Number(
+            document.getElementById(
+                "timeLimit"
+            ).value
+        );
+
+
+    const message =
+        document.getElementById(
+            "quizMessage"
+        );
+
+
+    if (!title) {
+
+        alert("Enter quiz title.");
+
+        return;
+    }
+
+
+    if (!timeLimit || timeLimit <= 0) {
+
+        alert("Enter a valid time limit.");
+
+        return;
+    }
+
+
+    const boxes =
+        document.querySelectorAll(
+            ".question"
+        );
+
+
+    if (boxes.length === 0) {
+
+        alert(
+            "Add at least one question."
+        );
+
+        return;
+    }
+
+
+    const questions = [];
+
+
+    for (const box of boxes) {
+
+        const questionText =
+            box.querySelector(
+                ".questionText"
+            ).value.trim();
+
+
+        const optionA =
+            box.querySelector(
+                ".optionA"
+            ).value.trim();
+
+
+        const optionB =
+            box.querySelector(
+                ".optionB"
+            ).value.trim();
+
+
+        const optionC =
+            box.querySelector(
+                ".optionC"
+            ).value.trim();
+
+
+        const optionD =
+            box.querySelector(
+                ".optionD"
+            ).value.trim();
+
+
+        const correctOption =
+            box.querySelector(
+                ".correctOption"
+            ).value;
+
+
+        if (
+            !questionText ||
+            !optionA ||
+            !optionB ||
+            !optionC ||
+            !optionD ||
+            !correctOption
+        ) {
+
+            alert(
+                "Fill all fields in every question."
+            );
+
+            return;
+        }
+
+
+        questions.push({
+
+            questionText:
+                questionText,
+
+            optionA:
+                optionA,
+
+            optionB:
+                optionB,
+
+            optionC:
+                optionC,
+
+            optionD:
+                optionD,
+
+            correctOption:
+                correctOption
+
+        });
+
+    }
+
+
+    const quizData = {
+
+        title: title,
+
+        description: description,
+
+        timeLimit: timeLimit,
+
+        questions: questions
+
+    };
+
+
+    try {
+
+        message.className = "";
+
+        message.innerText =
+            "Creating quiz...";
+
+
+        const response =
+            await fetch(
+                "/api/quizzes",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(
+                            quizData
+                        )
+                }
+            );
+
+
+        const result =
+            await response.text();
+
+
+        if (!response.ok) {
+
+            message.className =
+                "error";
+
+            message.innerText =
+                result ||
+                "Quiz creation failed.";
+
+            return;
+        }
+
+
+        message.className =
+            "success";
+
+        message.innerText =
+            "✅ Quiz created successfully!";
+
+
+        document.getElementById(
+            "quizTitle"
+        ).value = "";
+
+
+        document.getElementById(
+            "quizDescription"
+        ).value = "";
+
+
+        document.getElementById(
+            "timeLimit"
+        ).value = "";
+
+
+        document.getElementById(
+            "questionContainer"
+        ).innerHTML = "";
+
+
+        questionNumber = 0;
+
+        addQuestion();
+
+
+        loadQuizzes();
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        message.className =
+            "error";
+
+        message.innerText =
+            "Server error.";
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD QUIZZES
+========================================= */
+
+async function loadQuizzes() {
+
+    const container =
+        document.getElementById(
+            "quizContainer"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/quizzes"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load quizzes"
+            );
+        }
+
+
+        const quizzes =
+            await response.json();
+
+
+        container.innerHTML = "";
+
+
+        if (
+            !quizzes ||
+            quizzes.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    <h3>
+                        No quizzes created yet
+                    </h3>
+
+                    <p>
+                        Create your first quiz above.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        quizzes.forEach(
+            quiz => {
+
+                const questions =
+                    quiz.questions || [];
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "quiz-card";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        📘
+                        ${escapeHtml(
+                            quiz.title
+                        )}
+                    </h3>
+
+
+                    <div class="quiz-description">
+
+                        ${
+                            quiz.description
+                            ?
+                            escapeHtml(
+                                quiz.description
+                            )
+                            :
+                            "No description"
+                        }
+
+                    </div>
+
+
+                    <div class="badges">
+
+                        <span class="badge">
+
+                            📝
+                            ${questions.length}
+                            Questions
+
+                        </span>
+
+
+                        <span class="badge">
+
+                            ⏱️
+                            ${quiz.timeLimit || 0}
+                            Minutes
+
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="
+                            deleteQuiz(${quiz.id})
+                        ">
+
+                        🗑️ Delete Quiz
+
+                    </button>
+
+                `;
+
+
+                container.appendChild(div);
+
+            }
+        );
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                Unable to load quizzes.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   DELETE QUIZ
+========================================= */
+
+async function deleteQuiz(id) {
+
+    const confirmation =
+        confirm(
+            "Are you sure you want to delete this quiz?"
+        );
+
+
+    if (!confirmation) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/quizzes/" + id,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const result =
+            await response.text();
+
+
+        if (!response.ok) {
+
+            alert(
+                result ||
+                "Unable to delete quiz."
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Quiz deleted successfully."
+        );
+
+
+        loadQuizzes();
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Server error while deleting quiz."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD STUDENT MARKS
+========================================= */
+
+async function loadReport() {
+
+    const report =
+        document.getElementById(
+            "report"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/attempts/report"
+            );
+
+
+        if (!response.ok) {
+
+            report.innerHTML = `
+
+                <p class="error">
+
+                    Unable to load student marks.
+
+                </p>
+
+            `;
+
+            return;
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            report.innerHTML =
+
+                "<p>No student results yet.</p>";
+
+            return;
+        }
+
+
+        let html = `
+
+            <table>
+
+                <tr>
+
+                    <th>Student</th>
+
+                    <th>Register Number</th>
+
+                    <th>Quiz</th>
+
+                    <th>Marks</th>
+
+                    <th>Submitted</th>
+
+                </tr>
+
+        `;
+
+
+        data.forEach(item => {
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(
+                            item.studentName
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            item.registerNumber
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            item.quizTitle
+                        )}
+                    </td>
+
+                    <td>
+
+                        <strong>
+
+                            ${item.score || 0}
+                            /
+                            ${item.totalQuestions || 0}
+
+                        </strong>
+
+                    </td>
+
+                    <td>
+                        ${item.submissionTime || "-"}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        html += "</table>";
+
+
+        report.innerHTML = html;
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+        report.innerHTML = `
+
+            <p class="error">
+
+                Server error while loading marks.
+
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+function logout() {
+
+    sessionStorage.removeItem(
+        "facultyId"
+    );
+
+    sessionStorage.removeItem(
+        "facultyName"
+    );
+
+    window.location.href =
+        "faculty-login.html";
+
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+function escapeHtml(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value ?? "";
+
+    return div.innerHTML;
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+addQuestion();
+
+loadQuizzes();
+
+</script>
+
+</body>
+</html>
+

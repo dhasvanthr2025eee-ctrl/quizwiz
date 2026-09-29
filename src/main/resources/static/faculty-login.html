@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QuizWiz - Faculty Login</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #43cea2,
+                    #185a9d
+                );
+        }
+
+        .card {
+            width: 400px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0,0,0,0.25);
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #43cea2,
+                    #185a9d
+                );
+
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+
+            color: #777;
+
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #333;
+
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 13px;
+
+            margin-bottom: 18px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #185a9d;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 5px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #43cea2,
+                    #185a9d
+                );
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #message {
+            text-align: center;
+
+            margin-top: 15px;
+
+            min-height: 20px;
+
+            font-weight: bold;
+        }
+
+        .register {
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #666;
+        }
+
+        .register a {
+            color: #185a9d;
+
+            font-weight: bold;
+
+            text-decoration: none;
+        }
+
+        .footer {
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #999;
+
+            font-size: 12px;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="card">
+
+    <div class="logo">
+        Q
+    </div>
+
+    <h1>
+        Faculty Login
+    </h1>
+
+    <p class="subtitle">
+        Login to your QuizWiz faculty account
+    </p>
+
+
+    <label for="email">
+        Email Address
+    </label>
+
+    <input
+        type="email"
+        id="email"
+        placeholder="Enter email address"
+    >
+
+
+    <label for="password">
+        Password
+    </label>
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Enter password"
+    >
+
+
+    <button onclick="loginFaculty()">
+        Login
+    </button>
+
+
+    <p id="message"></p>
+
+
+    <div class="register">
+
+        Don't have an account?
+
+        <a href="faculty-register.html">
+            Register
+        </a>
+
+    </div>
+
+
+    <div class="footer">
+
+        QuizWiz - Online Quiz Conducting System
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function loginFaculty() {
+
+    const email =
+        document.getElementById("email")
+        .value
+        .trim();
+
+    const password =
+        document.getElementById("password")
+        .value
+        .trim();
+
+    const message =
+        document.getElementById("message");
+
+
+    // Check empty fields
+    if (email === "" ||
+        password === "") {
+
+        message.style.color = "red";
+
+        message.innerText =
+            "Please enter email and password.";
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            "/api/faculty/login",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            }
+        );
+
+
+        if (response.ok) {
+
+            const faculty =
+                await response.json();
+
+
+            // Store faculty details
+            sessionStorage.setItem(
+                "facultyId",
+                faculty.id
+            );
+
+            sessionStorage.setItem(
+                "facultyName",
+                faculty.name
+            );
+
+            sessionStorage.setItem(
+                "facultyEmail",
+                faculty.email
+            );
+
+
+            message.style.color = "green";
+
+            message.innerText =
+                "Login successful!";
+
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "faculty.html";
+
+            }, 500);
+
+        } else {
+
+            const error =
+                await response.text();
+
+            message.style.color = "red";
+
+            message.innerText =
+                error ||
+                "Invalid email or password.";
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.style.color = "red";
+
+        message.innerText =
+            "Cannot connect to server.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
+
